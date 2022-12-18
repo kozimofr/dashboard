@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+echo -e "Backing up the Metabase database..."
+
+backup_filename="${BACKUP_FILE_PREFIX}_$(date +'%Y_%m_%dT%H_%M_%S').db.tar.gz"
+
+tar -zcvf "${BACKUP_DIR_PATH}/${backup_filename}" ${MB_DB_FILE}
+
+echo -e "Metabase database backup '${backup_filename}' has been created and placed in '${BACKUP_DIR_PATH}'."

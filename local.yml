@@ -1,0 +1,27 @@
+version: "2"
+
+volumes:
+  kozimo_dashboard_local_metabase_data:
+    name: kozimo_dashboard_local_metabase_data
+  kozimo_dashboard_local_metabase_backups:
+    name: kozimo_dashboard_local_metabase_backups
+
+services:
+  metabase:
+    image: metabase/metabase
+    container_name: kozimo_dashboard_local_metabase
+    volumes:
+      - ./metabase:/usr/local/bin
+      - kozimo_dashboard_local_metabase_data:/data
+      - kozimo_dashboard_local_metabase_backups:/backups
+    env_file:
+      - ./.envs/.metabase
+    environment:
+      - VIRTUAL_HOST=dashboard.kozimo.local
+      - VIRTUAL_PORT=3000
+    networks:
+      - kozimo_nginxproxy_local_network
+
+networks:
+  kozimo_nginxproxy_local_network:
+    external: true

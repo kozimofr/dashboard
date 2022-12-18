@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+if [[ -z ${1+x} ]]; then
+    echo -e "Backup filename is not specified yet it is a required parameter. Make sure you provide one and try again."
+    exit 1
+fi
+backup_filename="${BACKUP_DIR_PATH}/${1}"
+if [[ ! -f "${backup_filename}" ]]; then
+    echo -e "No backup with the specified filename found. Check out the 'backups' maintenance script output to see if there is one and try again."
+    exit 1
+fi
+
+echo -e "Restoring the Metabase database from the '${backup_filename}' backup..."
+
+rm -rf ${MB_DB_FILE}
+tar -zxvf ${backup_filename}
+
+echo -e "The Metabase database has been restored from the '${backup_filename}' backup."

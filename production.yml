@@ -1,0 +1,30 @@
+version: "2"
+
+volumes:
+  kozimo_dashboard_production_metabase_data:
+    name: kozimo_dashboard_production_metabase_data
+  kozimo_dashboard_production_metabase_backups:
+    name: kozimo_dashboard_production_metabase_backups
+
+services:
+  metabase:
+    build:
+      context: .
+      dockerfile: ./compose/production/Dockerfile
+    image: kozimo_dashboard_production_metabase
+    container_name: kozimo_dashboard_production_metabase
+    volumes:
+      - kozimo_dashboard_production_metabase_data:/data
+      - kozimo_dashboard_production_metabase_backups:/backups
+    env_file:
+      - ./.envs/.metabase
+    environment:
+      - VIRTUAL_HOST=dashboard.kozimo.fr
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=dashboard.kozimo.fr
+    networks:
+      - kozimo_nginxproxy_production_network
+
+networks:
+  kozimo_nginxproxy_production_network:
+    external: true
